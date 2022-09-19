@@ -20,7 +20,7 @@ class PhotoViewModel constructor(val photoRepo: PhotoRepo) : ViewModel() {
     }
 
     fun getPhotos() {
-        job = CoroutineScope(Dispatchers.IO).launch {
+        job = CoroutineScope(Dispatchers.IO+exceptionHandler).launch {
             val resultApi = photoRepo.getPhotos()
             withContext(Dispatchers.Main) {
                 Log.d("trace-resbody", resultApi?.body().toString())
