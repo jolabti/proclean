@@ -9,6 +9,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import xyz.johannainggolan.appnetworking.BuildConfig.DEBUG
 import xyz.johannainggolan.appnetworking.apiinterface.RestService
+import xyz.johannainggolan.appnetworking.repositories.PhotoRepo
 import xyz.johannainggolan.appnetworking.viewmodels.PhotoViewModel
 import java.util.concurrent.TimeUnit
 
@@ -19,6 +20,13 @@ val serviceModule = module {
         return retrofit.create(RestService::class.java)
     }
     single { providePhotoService(get()) }
+}
+
+val repoModule = module {
+    fun provideRepoPhoto(retroService: RestService): PhotoRepo {
+        return PhotoRepo(retroService)
+    }
+    single { provideRepoPhoto(get()) }
 }
 
 val networkConnectionModule = module {

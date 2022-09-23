@@ -1,6 +1,7 @@
 package xyz.johannainggolan.appnetworking.viewmodels
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.*
@@ -11,6 +12,10 @@ class PhotoViewModel constructor(val photoRepo: PhotoRepo) : ViewModel() {
 
     val errorMessage = MutableLiveData<String>()
     val movieList = MutableLiveData<List<Photo>>()
+
+    val _mtbDataResponse = MutableLiveData<String>("")
+    val _lvdDataResponse : LiveData<String> get() = _mtbDataResponse
+
     var job: Job? = null
 
     val loading = MutableLiveData<Boolean>()
@@ -22,8 +27,8 @@ class PhotoViewModel constructor(val photoRepo: PhotoRepo) : ViewModel() {
     fun getPhotos() {
         job = CoroutineScope(Dispatchers.IO+exceptionHandler).launch {
             val resultApi = photoRepo.getPhotos()
-            withContext(Dispatchers.Main) {
-                Log.d("trace-resbody", resultApi?.body().toString())
+            withContext(Dispatchers.IO) {
+                _mtbDataResponse.postValue(resultApi?.body().toString())
             }
         }
     }
